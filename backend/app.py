@@ -23,6 +23,17 @@ CORS(app, resources={
 # Désactiver la redirection automatique des slashs
 app.url_map.strict_slashes = False
 
+# Handler explicite pour OPTIONS (preflight)
+@app.route('/api/<path:path>', methods=['OPTIONS'])
+@app.route('/api', methods=['OPTIONS'])
+def handle_options(path=None):
+    response = Response()
+    response.headers['Access-Control-Allow-Origin'] = 'https://park-pro.netlify.app'
+    response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
+    response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
+    response.headers['Access-Control-Allow-Credentials'] = 'true'
+    return response
+
 @app.route('/favicon.ico')
 def favicon():
     return Response(status=204)
