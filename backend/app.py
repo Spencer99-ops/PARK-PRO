@@ -38,6 +38,8 @@ elif DATABASE_URL and not DATABASE_URL.startswith(('postgresql://', 'sqlite://')
 
 app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+# Désactiver le dossier instance pour Vercel (système de fichiers en lecture seule)
+app.config['INSTANCE_PATH'] = '/tmp'
 db = SQLAlchemy(app)
 
 # --- MODÈLES ---
