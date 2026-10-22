@@ -36,10 +36,18 @@ elif DATABASE_URL and not DATABASE_URL.startswith(('postgresql://', 'sqlite://')
     print(f"WARNING: Invalid DATABASE_URL format: {DATABASE_URL[:20]}... Using SQLite fallback")
     DATABASE_URL = 'sqlite:///parking.db'
 
+# Changer le dialecte pour utiliser psycopg3 au lieu de psycopg2
+if DATABASE_URL.startswith('postgresql://'):
+    DATABASE_URL = DATABASE_URL.replace('postgresql://', 'postgresql+psycopg://', 1)
+
 app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # Désactiver le dossier instance pour Vercel (système de fichiers en lecture seule)
 app.config['INSTANCE_PATH'] = '/tmp'
+# Forcer l'utilisation de psycopg3 au lieu de psycopg2
+app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
+    'pool_pre_ping': True,
+}
 db = SQLAlchemy(app)
 
 # --- MODÈLES ---
