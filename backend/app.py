@@ -10,7 +10,18 @@ from dotenv import load_dotenv
 load_dotenv()
 
 app = Flask(__name__)
-CORS(app)
+# Configuration CORS spécifique pour autoriser Netlify
+CORS(app, resources={
+    r"/*": {
+        "origins": ["https://park-pro.netlify.app", "http://localhost:5173", "http://127.0.0.1:5000"],
+        "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        "allow_headers": ["Content-Type", "Authorization"],
+        "supports_credentials": True
+    }
+})
+
+# Désactiver la redirection automatique des slashs
+app.url_map.strict_slashes = False
 
 @app.route('/favicon.ico')
 def favicon():
