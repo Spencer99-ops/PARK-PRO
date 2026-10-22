@@ -4,6 +4,10 @@ from flask_cors import CORS
 from datetime import datetime, timedelta, timezone
 import logging
 from sqlalchemy import text
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = Flask(__name__)
 CORS(app)
@@ -21,7 +25,13 @@ DATE_FORMAT_FULL = '%d/%m/%Y %H:%M'
 logging.basicConfig(level=logging.INFO)
 
 # Configuration Base de données
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///parking.db'
+# Utilise DATABASE_URL si disponible (PostgreSQL en production), sinon SQLite (développement local)
+DATABASE_URL = os.getenv('DATABASE_URL', 'sqlite:///parking.db')
+# Si DATABASE_URL commence par postgres://, remplace par postgresql:// pour SQLAlchemy
+if DATABASE_URL.startswith('postgres://'):
+    DATABASE_URL = DATABASE_URL.replace('postgres://', 'postgresql://', 1)
+
+app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
