@@ -26,7 +26,7 @@ Vous avez déjà :
 
 **Framework Preset :** Python
 
-**Root Directory :** `backend`
+**Root Directory :** `./` (laissez vide ou la racine)
 
 ### 1.3 Variables d'environnement
 Dans la section "Environment Variables", ajoutez :
