@@ -27,9 +27,14 @@ logging.basicConfig(level=logging.INFO)
 # Configuration Base de données
 # Utilise DATABASE_URL si disponible (PostgreSQL en production), sinon SQLite (développement local)
 DATABASE_URL = os.getenv('DATABASE_URL', 'sqlite:///parking.db')
-# Si DATABASE_URL commence par postgres://, remplace par postgresql:// pour SQLAlchemy
-if DATABASE_URL.startswith('postgres://'):
+
+# Validation et correction de l'URL de base de données
+if DATABASE_URL and DATABASE_URL.startswith('postgres://'):
     DATABASE_URL = DATABASE_URL.replace('postgres://', 'postgresql://', 1)
+elif DATABASE_URL and not DATABASE_URL.startswith(('postgresql://', 'sqlite://')):
+    # Si l'URL ne commence pas par le bon protocole, utiliser SQLite en fallback
+    print(f"WARNING: Invalid DATABASE_URL format: {DATABASE_URL[:20]}... Using SQLite fallback")
+    DATABASE_URL = 'sqlite:///parking.db'
 
 app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
