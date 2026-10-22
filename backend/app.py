@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from datetime import datetime, timedelta, timezone
 import logging
-from sqlalchemy import text
+from sqlalchemy import text, func
 import os
 from dotenv import load_dotenv
 
