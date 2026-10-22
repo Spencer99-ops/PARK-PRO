@@ -45,3 +45,4 @@ logs/
 
 # Backend instance
 backend/instance/
+.neon

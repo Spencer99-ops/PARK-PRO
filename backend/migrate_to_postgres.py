@@ -22,9 +22,13 @@ def migrate():
         return
 
     # Parse DATABASE_URL
-    # Format: postgresql://user:password@host:port/dbname
+    # Format: postgresql://user:password@host:port/dbname?params
     if POSTGRES_URL.startswith('postgresql://'):
         url = POSTGRES_URL.replace('postgresql://', '')
+        # Séparer les paramètres de query
+        if '?' in url:
+            url, _ = url.split('?', 1)
+        
         if '@' in url:
             auth_part, host_part = url.split('@')
             if ':' in auth_part:
@@ -63,7 +67,8 @@ def migrate():
             port=port,
             database=dbname,
             user=user,
-            password=password
+            password=password,
+            sslmode='require'
         )
         pg_cursor = pg_conn.cursor()
 
@@ -84,11 +89,15 @@ def migrate():
             print(f"\nMigration de la table: {table}")
 
             # Lire les données SQLite
-            sqlite_cursor.execute(f"SELECT * FROM {table}")
-            rows = sqlite_cursor.fetchall()
+            try:
+                sqlite_cursor.execute(f"SELECT * FROM {table}")
+                rows = sqlite_cursor.fetchall()
+            except Exception as e:
+                print(f"  Table {table} inexistante dans SQLite: {e}")
+                continue
 
             if not rows:
-                print(f"  Table {table} vide ou inexistante")
+                print(f"  Table {table} vide")
                 continue
 
             # Obtenir les colonnes
@@ -96,13 +105,13 @@ def migrate():
             print(f"  Colonnes: {columns}")
             print(f"  Nombre de lignes: {len(rows)}")
 
-            # Insérer dans PostgreSQL
+            # Insérer dans PostgreSQL avec ON CONFLICT DO NOTHING pour éviter les doublons
             for row in rows:
                 row_dict = dict(row)
                 columns_list = list(row_dict.keys())
                 values_list = list(row_dict.values())
 
-                insert_query = sql.SQL("INSERT INTO {} ({}) VALUES ({})").format(
+                insert_query = sql.SQL("INSERT INTO {} ({}) VALUES ({}) ON CONFLICT DO NOTHING").format(
                     sql.Identifier(table),
                     sql.SQL(', ').join(map(sql.Identifier, columns_list)),
                     sql.SQL(', ').join(sql.Placeholder() * len(values_list))
@@ -115,9 +124,9 @@ def migrate():
                     continue
 
             pg_conn.commit()
-            print(f"  Table {table} migrée avec succès")
+            print(f"  Table {table} migree avec succes")
 
-        print("\n✅ Migration terminée!")
+        print("\nMigration terminee!")
 
         sqlite_conn.close()
         pg_conn.close()

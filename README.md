@@ -6,20 +6,31 @@ Application de gestion de parking avec système de réservation, abonnements et 
 
 - **Frontend**: React + Vite
 - **Backend**: Flask + SQLAlchemy
-- **Base de données**: SQLite (version de développement)
+- **Base de données**: PostgreSQL (Neon) - Base de données cloud gratuite
 
 ## Installation
 
 ### Backend
+
+Le projet utilise Neon PostgreSQL pour la base de données.
+
+**Première installation avec Neon:**
 
 ```bash
 cd backend
 python -m venv venv
 venv\Scripts\activate  # Windows
 pip install -r requirements.txt
-python init_db.py
-python init_system.py
+cp .env.example .env
+# Éditez .env et ajoutez votre DATABASE_URL Neon
+python init_postgres.py  # Crée le schéma PostgreSQL
 python app.py
+```
+
+**Pour migrer des données existantes de SQLite vers PostgreSQL:**
+
+```bash
+python migrate_to_postgres.py
 ```
 
 Le backend démarre sur `http://127.0.0.1:5000`
@@ -45,7 +56,12 @@ Le frontend démarre sur `http://localhost:5173`
 Pour l'hébergement gratuit:
 - Frontend: Netlify
 - Backend: Render ou Railway
-- Base de données: Migrer vers PostgreSQL (Supabase ou Neon)
+- Base de données: Neon PostgreSQL (déjà configuré)
+
+**Configuration de production:**
+
+Sur Render/Railway, ajoutez la variable d'environnement:
+- `DATABASE_URL`: L'URL de connexion Neon (disponible dans le dashboard Neon)
 
 ## Structure du projet
 
