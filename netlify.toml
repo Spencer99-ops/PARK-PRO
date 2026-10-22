@@ -10,3 +10,9 @@
   from = "/*"
   to = "/index.html"
   status = 200
+
+[[redirects]]
+  from = "/api/:path*"
+  to = "https://park-18punfznh-park-pro.vercel.app/api/:path*"
+  status = 200
+  force = true
