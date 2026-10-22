@@ -4,8 +4,7 @@ import {
   LogOut, AlertCircle 
 } from 'lucide-react';
 import { theme } from '../Theme';
-
-const API = "http://127.0.0.1:5000/api";
+import { API } from '../config';
 
 export default function DashboardClient({ user, onLogout }) {
   const [activeTab, setActiveTab] = useState('reserver');

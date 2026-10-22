@@ -2,11 +2,10 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { theme } from '../Theme';
+import { API } from '../config';
 
 // Importez une de vos images de parking
-import BackgroundImg from './parking(1).jpeg'; 
-
-const API = "http://127.0.0.1:5000/api";
+import BackgroundImg from './parking(1).jpeg';
 
 export default function Login({ onLogin, onBack }) {
   const [isRegister, setIsRegister] = useState(false);
