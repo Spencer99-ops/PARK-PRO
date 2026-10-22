@@ -10,38 +10,26 @@ Vous avez déjà :
 
 ---
 
-## Étape 1 : Déployer le Backend sur Render (5 minutes)
+## Étape 1 : Déployer le Backend sur Vercel (5 minutes)
 
-### 1.1 Créer un compte Render
-- Allez sur https://render.com
+### 1.1 Créer un compte Vercel
+- Allez sur https://vercel.com
 - Cliquez sur "Sign Up"
 - Connectez-vous avec votre compte GitHub
 
-### 1.2 Créer un nouveau Web Service
-1. Cliquez sur "New +" → "Web Service"
-2. Connectez votre repo GitHub (Sélectionnez "Spencer99-ops/PARK-PRO")
-3. Configurez le service :
+### 1.2 Importer le projet
+1. Cliquez sur "Add New Project"
+2. Sélectionnez votre repo GitHub "Spencer99-ops/PARK-PRO"
+3. Configurez le projet :
 
-**Nom :** `park-pro-backend`
+**Project Name :** `park-pro-backend`
 
-**Branch :** `main`
+**Framework Preset :** Python
 
 **Root Directory :** `backend`
 
-**Runtime :** `Python 3`
-
-**Build Command :**
-```
-pip install -r requirements.txt
-```
-
-**Start Command :**
-```
-gunicorn app:app
-```
-
 ### 1.3 Variables d'environnement
-Ajoutez ces variables dans la section "Environment" :
+Dans la section "Environment Variables", ajoutez :
 
 ```
 DATABASE_URL = postgresql://neondb_owner:npg_hsUrg51zJtOY@ep-gentle-sea-b83v6fbw-pooler.c-14.us-east-1.aws.neon.tech/neondb?channel_binding=require&sslmode=require
@@ -49,10 +37,10 @@ DATABASE_URL = postgresql://neondb_owner:npg_hsUrg51zJtOY@ep-gentle-sea-b83v6fbw
 
 💡 Vous pouvez trouver cette URL dans votre dashboard Neon ou dans `.env.local`
 
-### 1.4 Cliquez sur "Create Web Service"
-- Render va construire et déployer votre backend
-- Attendez ~3-5 minutes
-- Vous aurez une URL comme : `https://park-pro-backend.onrender.com`
+### 1.4 Cliquez sur "Deploy"
+- Vercel va construire et déployer votre backend
+- Attendez ~2-3 minutes
+- Vous aurez une URL comme : `https://park-pro-backend.vercel.app`
 
 ---
 
@@ -84,7 +72,7 @@ frontend/dist
 **Environment variables :**
 Ajoutez dans "Site settings" → "Environment variables" :
 ```
-VITE_API_URL = https://park-pro-backend.onrender.com/api
+VITE_API_URL = https://park-pro-backend.vercel.app/api
 ```
 
 4. Cliquez sur "Deploy site"
@@ -98,7 +86,7 @@ VITE_API_URL = https://park-pro-backend.onrender.com/api
 ### 3.1 Tester le backend
 Ouvrez dans votre navigateur :
 ```
-https://park-pro-backend.onrender.com/api/connexion
+https://park-pro-backend.vercel.app/api/connexion
 ```
 
 Vous devriez voir une réponse JSON (probablement une erreur 400 car pas de POST, mais ça prouve que le backend fonctionne)
@@ -117,7 +105,7 @@ Votre architecture maintenant :
 ```
 🌐 Frontend React → Netlify (gratuit)
    ↓ API calls
-🔧 Backend Flask → Render (gratuit)
+🔧 Backend Flask → Vercel (gratuit)
    ↓
 🗄️ PostgreSQL → Neon (gratuit)
 ```
@@ -133,10 +121,10 @@ CORS(app)
 ```
 
 ### Problème : Backend ne démarre pas
-Vérifiez les logs Render :
-1. Allez sur votre dashboard Render
+Vérifiez les logs Vercel :
+1. Allez sur votre dashboard Vercel
 2. Cliquez sur "park-pro-backend"
 3. Onglet "Logs"
 
 ### Problème : Base de données non connectée
-Vérifiez que `DATABASE_URL` est correctement configurée dans Render
+Vérifiez que `DATABASE_URL` est correctement configurée dans Vercel
